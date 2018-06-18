@@ -2,24 +2,19 @@ pragma solidity ^0.4.14;
 
 contract Payroll {
 
-    //初始薪水
     uint salary = 1 ether;
-    
-    //老板钱包地址
     address boss;
-    
-    //员工钱包地址
     address employee = 0x14723a09acff6d2a60dcdf7aa4aff308fddc160c;
     
     uint constant payDuration = 10 seconds;
     uint lastPayday = now;
     
-    //初始化老板地址为执行合约地址
+    //initial boss address
     function Payroll() {
        boss = msg.sender;
     }
     
-    //只有老板可以设置员工薪水
+    //only boss can set salary
     function setSalary(uint s){
         if(msg.sender != boss){
             revert();
@@ -32,7 +27,7 @@ contract Payroll {
         return salary;
     }  
     
-    //只有老板可以设置员工钱包地址
+    //only boss can set employee address
     function setAddress(address addr){
         if(msg.sender != boss){
             revert();
