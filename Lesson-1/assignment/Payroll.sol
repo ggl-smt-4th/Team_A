@@ -2,25 +2,47 @@ pragma solidity ^0.4.14;
 
 contract Payroll {
 
-    uint salary;
-    address payee;
+    //初始薪水
+    uint salary = 1 ether;
+    
+    //老板钱包地址
+    address boss;
+    
+    //员工钱包地址
+    address employee = 0x14723a09acff6d2a60dcdf7aa4aff308fddc160c;
+    
     uint constant payDuration = 10 seconds;
     uint lastPayday = now;
     
+    //初始化老板地址为执行合约地址
+    function Payroll() {
+       boss = msg.sender;
+    }
+    
+    //只有老板可以设置员工薪水
     function setSalary(uint s){
-        salary = s;
+        if(msg.sender != boss){
+            revert();
+        }
+        
+        salary = s*1 ether;
     }
 
     function getSalary() returns (uint) {
         return salary;
     }  
     
+    //只有老板可以设置员工钱包地址
     function setAddress(address addr){
-        payee = addr;
+        if(msg.sender != boss){
+            revert();
+        }
+        
+        employee = addr;
     }
     
     function getAddress() returns(address){
-        return payee;
+        return employee;
     }
     
     function addFund() payable returns(uint){
@@ -40,7 +62,7 @@ contract Payroll {
     }
     
     function getPaid() payable{
-        if(msg.sender != payee){
+        if(msg.sender != employee){
             revert();
         }
         
@@ -49,6 +71,6 @@ contract Payroll {
             revert();
         }
         lastPayday = nextPayday;
-        payee.transfer(salary);
+        employee.transfer(salary);
     }
 }
