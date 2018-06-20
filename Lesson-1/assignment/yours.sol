@@ -12,8 +12,11 @@ contract Payroll {
         boss = msg.sender;
     }
     
-    function update_employer(uint n,address s) {
+    function update_address(address s) {
         employer = s;
+    }
+    
+    function update_salary(uint n) {
         salary = n * 1 ether;
     }
     
