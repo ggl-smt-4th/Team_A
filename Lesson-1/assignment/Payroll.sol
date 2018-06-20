@@ -1,5 +1,10 @@
 pragma solidity ^0.4.14;
 
+/**
+ * @title Payroll
+ * @dev A payroll system for single employee.
+ */
+
 import './SafeMath.sol';
 import './Ownable.sol';
 
@@ -11,16 +16,15 @@ contract Payroll is Ownable {
         uint lastPayday;
     }
     
-    uint constant payDuration = 10 seconds;
+    uint constant payDuration = 1 hours;
     uint totalEmployee = 1;
     Employee employee;
     
     /** 
      * @dev The constructor sets the contract owner and employee info.
      */
-    function Payroll(address _id, uint _salary, uint _lastPayday) payable {
-        //owner = ownerAddr;
-        employee = Employee(_id, _salary.mul(1 ether), _lastPayday);
+    function Payroll(address _id, uint _salary) {
+        employee = Employee(_id, _salary.mul(1 ether), now);
     }
 
     modifier employeeValid(address employeeId) {
@@ -28,7 +32,7 @@ contract Payroll is Ownable {
         _;
     }
     
-    function _partialPaid(Employee employeeCurr) private employeeValid(employeeCurr.id) {
+    function partialPaid(Employee employeeCurr) private employeeValid(employeeCurr.id) {
         uint payment = employeeCurr.salary
             .mul(now.sub(employeeCurr.lastPayday))
             .div(payDuration);
@@ -36,13 +40,13 @@ contract Payroll is Ownable {
     }
     
     function updateEmployeeId(address employeeId) onlyOwner employeeValid(employeeId) {
-        _partialPaid(employee);
+        partialPaid(employee);
         employee.lastPayday = now;
         employee.id = employeeId;
     }
     
     function updateEmployeeSalary(uint salary) onlyOwner {
-        _partialPaid(employee);
+        partialPaid(employee);
         employee.lastPayday = now;
         employee.salary = salary;
     }
@@ -69,7 +73,8 @@ contract Payroll is Ownable {
         employee.id.transfer(employee.salary);
     }
     
-    function checkInfo() returns (address id, uint salary, uint date) {
+    function checkInfo() returns (uint balance, address id, uint salary, uint date) {
+        balance = this.balance;
         id = employee.id;
         salary = employee.salary;
         date = employee.lastPayday;
