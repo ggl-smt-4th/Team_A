@@ -8,19 +8,20 @@ contract Payroll {
     uint constant payDuration = 10 seconds;
     uint lastPayday = now;
     
-    function Payroll() {
+    function Payroll() {    //By default,the deployment account is a boss account
         boss = msg.sender;
     }
     
-    function update_address(address s) {
+    function update_address(address s) {  //change the employer address
         employer = s;
     }
     
-    function update_salary(uint n) {
+    function update_salary(uint n) {      //change the employer salary
+        clearoldsalary();
         salary = n * 1 ether;
     }
     
-    function addFund(address s) payable returns (uint) {
+    function addFund(address s) payable returns (uint) {   //Boss account can increase money
         require(boss == s);
         return this.balance;
     }
@@ -33,7 +34,13 @@ contract Payroll {
         return calculateRunway() > 0;
     }
     
-    function getPaid(address s) {
+    function clearoldsalary() {   //clear the current account salary
+        uint payment = salary * ((now - lastPayday) / payDuration);
+        employer.transfer(payment);
+        lastPayday = now;
+    }
+    
+    function getPaid(address s) {   //Only employee can get account balance
         require(employer == s);
         uint nextPayday = lastPayday + payDuration;
         if (nextPayday > now) {
@@ -43,7 +50,7 @@ contract Payroll {
         employer.transfer(salary);
     }
     
-    function currentPaid(address s) returns (uint) {
+    function currentPaid(address s) returns (uint) {   //Only employee can check account balance
         require(employer == s);
         return employer.balance;
     }
