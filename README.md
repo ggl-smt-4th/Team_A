@@ -1,1 +1,2 @@
-# Team_A
+Solidity development training
+Lesson-1 pending.
