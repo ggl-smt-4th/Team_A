@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ### 智能合约开发课程项目
 
 * 各个课程对应的代码在 projects 目录中
@@ -26,3 +27,7 @@
 > 如何提交作业: https://www.youtube.com/watch?v=X5tLHiYkHIU&t=40s
 
 > 如何更新代码: https://www.youtube.com/watch?v=G_DpaJaFvUc
+=======
+Solidity development training
+Lesson-1 pending.
+>>>>>>> 6ef44fe9198a5a41c6906c93636298284ee3b1bd
