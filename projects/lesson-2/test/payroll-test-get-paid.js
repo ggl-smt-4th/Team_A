@@ -5,7 +5,7 @@ contract('Payroll', function (accounts) {
   const employee = accounts[1]
   const guest = accounts[5]
   const salary = 1;
-  const runway = 2;
+  const runway = 20;
   const payDuration = (30 + 1) * 86400;
   const fund = runway * salary;
 
@@ -19,6 +19,9 @@ contract('Payroll', function (accounts) {
     }).then(() => {
       return payroll.calculateRunway();
     }).then(runwayRet => {
+      if (!runwayRet.toNumber || typeof runwayRet.toNumber !== "function") {
+        assert(false, "the function `calculateRunway()` should be defined as: `function calculateRunway() public view returns (uint)` | `calculateRunway()` 应定义为: `function calculateRunway() public view returns (uint)`");
+      }
       assert.equal(runwayRet.toNumber(), runway, "Try addFund() fail, runway is not right");
       return web3.currentProvider.send({jsonrpc: "2.0", method: "evm_increaseTime", params: [payDuration], id: 0});
     }).then(() => {
@@ -26,7 +29,7 @@ contract('Payroll', function (accounts) {
     }).then((getPaidRet) => {
       return payroll.calculateRunway();
     }).then(runwayRet => {
-      assert.equal(runwayRet, runway - 1, "The runway is not correct");
+      assert.equal(runwayRet.toNumber(), runway - 1, "The runway is not correct");
     });
   });
 
@@ -45,7 +48,7 @@ contract('Payroll', function (accounts) {
     }).then((getPaidRet) => {
       assert(false, "Should not be successful");
     }).catch(error => {
-      assert.include(error.toString(), "Error: VM Exception while processing transaction: revert", "Should not getPaid() before a pay duration");
+      assert.include(error.toString(), "Error: VM Exception", "Should not getPaid() before a pay duration");
     });
   });
 
@@ -64,7 +67,7 @@ contract('Payroll', function (accounts) {
     }).then((getPaidRet) => {
       assert(false, "Should not be successful");
     }).catch(error => {
-      assert.include(error.toString(), "Error: VM Exception while processing transaction: revert", "Should not call getPaid() by a non-employee");
+      assert.include(error.toString(), "Error: VM Exception", "Should not call getPaid() by a non-employee");
     });
   });
 });

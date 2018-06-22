@@ -22,7 +22,7 @@ contract('Payroll', function (accounts) {
     }).then(() => {
       assert(false, "Should not be successful");
     }).catch(error => {
-      assert.include(error.toString(), "Error: VM Exception while processing transaction: revert", "Can not call addEmployee() by guest");
+      assert.include(error.toString(), "Error: VM Exception", "Can not call addEmployee() by guest");
     });
   });
 });
