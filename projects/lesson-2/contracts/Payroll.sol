@@ -16,7 +16,7 @@ contract Payroll {
     uint calculateRunWayValue;
 
 
-    function constractor() payable public {
+    function Payroll() payable public {
         owner = msg.sender;
     }
 
