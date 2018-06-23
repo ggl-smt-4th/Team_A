@@ -1,6 +1,14 @@
 pragma solidity ^0.4.14;
 
+/**
+ * @title Payroll
+ * @dev A payroll system for multiple employee.
+ */
+
+import './SafeMath.sol';
+
 contract Payroll {
+    using SafeMath for uint;
 
     struct Employee {
         address id;
@@ -8,7 +16,7 @@ contract Payroll {
         uint lastPayday;
     }
 
-    uint constant payDuration = 30 days;
+    uint constant payDuration = 10 seconds;
 
     address owner;
     uint totalSalary;
@@ -32,7 +40,7 @@ contract Payroll {
 
     function findEmployee(address employeeId) public returns (uint) {
         for (uint i = 0; i < employees.length; i++) {
-            if (employees[i] == employeeId) {
+            if (employees[i].id == employeeId) {
                 return i;
             }
         }
@@ -52,20 +60,21 @@ contract Payroll {
     function removeEmployee(address employeeId) public {
         require(msg.sender == owner);
         // TODO: your code here
-        tmpId = findEmployee(employeeId);
+        uint tmpId = findEmployee(employeeId);
         require(tmpId < employees.length);
 
         var employee = employees[tmpId];
         _partialPaid(employee);
+        delete employees[tmpId];
         employees[tmpId] = employees[employees.length - 1];
-        delete employees[employees.length - 1];
+        employees.length -= 1;
         totalSalary = totalSalary.sub(employee.salary);
     }
 
     function updateEmployee(address employeeId, uint salary) public employeeValid(employeeId) {
         require(msg.sender == owner);
         // TODO: your code here
-        tmpId = findEmployee(employeeId);
+        uint tmpId = findEmployee(employeeId);
         var employee = employees[tmpId];
         if (tmpId < employees.length) {
             _partialPaid(employee);
@@ -82,18 +91,18 @@ contract Payroll {
         return address(this).balance;
     }
 
-    function calculateRunway() public view returns (uint) {
+    function calculateRunway() public constant returns (uint) {
         // TODO: your code here
         return address(this).balance.div(totalSalary);
     }
 
-    function hasEnoughFund() public view returns (bool) {
+    function hasEnoughFund() public constant returns (bool) {
         return calculateRunway() > 0;
     }
 
     function getPaid() public employeeValid(msg.sender) {
         // TODO: your code here
-        tmpId = findEmployee(msg.sender);
+        uint tmpId = findEmployee(msg.sender);
         require(tmpId < employees.length);
 
         uint nextPayday = employees[tmpId].lastPayday.add(payDuration);
@@ -102,5 +111,8 @@ contract Payroll {
         employees[tmpId].lastPayday = nextPayday;
         employees[tmpId].id.transfer(employees[tmpId].salary);
     }
+    
+    function checkInfo() returns (uint balance, uint employeeCount, uint budget) {
+        return (address(this).balance, employees.length, totalSalary);
+    }
 }
-
