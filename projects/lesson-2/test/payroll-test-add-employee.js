@@ -8,7 +8,7 @@ contract('Payroll', function (accounts) {
 
   it("Test call addEmployee() by owner", function () {
     var payroll;
-    return Payroll.deployed().then(instance => {
+    return Payroll.new().then(instance => {
       payroll = instance;
       return payroll.addEmployee(employee, salary, {from: owner});
     });
@@ -16,13 +16,13 @@ contract('Payroll', function (accounts) {
 
   it("Test addEmployee() by guest", function () {
     var payroll;
-    return Payroll.deployed().then(function (instance) {
+    return Payroll.new().then(function (instance) {
       payroll = instance;
       return payroll.addEmployee(employee, salary, {from: guest});
     }).then(() => {
       assert(false, "Should not be successful");
     }).catch(error => {
-      assert.include(error.toString(), "Error: VM Exception", "Cannot call addEmployee() by guest");
+      assert.include(error.toString(), "Error: VM Exception", "Can not call addEmployee() by guest");
     });
   });
 });

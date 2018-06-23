@@ -11,11 +11,9 @@ contract('Payroll', function (accounts) {
 
   it("Test getPaid()", function () {
     var payroll;
-    return Payroll.deployed.call(owner, {from: owner, value: web3.toWei(fund, 'ether')}).then(instance => {
+    return Payroll.new.call(owner, {from: owner, value: web3.toWei(fund, 'ether')}).then(instance => {
       payroll = instance;
       return payroll.addEmployee(employee, salary, {from: owner});
-    }).then(() => {
-      return payroll.addFund({from: owner, value: web3.toWei(fund, 'ether')});
     }).then(() => {
       return payroll.calculateRunway();
     }).then(runwayRet => {
@@ -35,11 +33,9 @@ contract('Payroll', function (accounts) {
 
   it("Test getPaid() before duration", function () {
     var payroll;
-    return Payroll.deployed.call(owner, {from: owner, value: web3.toWei(fund, 'ether')}).then(instance => {
+    return Payroll.new.call(owner, {from: owner, value: web3.toWei(fund, 'ether')}).then(instance => {
       payroll = instance;
       return payroll.addEmployee(employee, salary, {from: owner});
-    }).then(() => {
-      return payroll.addFund({from: owner, value: web3.toWei(fund, 'ether')});
     }).then(() => {
       return payroll.calculateRunway();
     }).then(runwayRet => {
@@ -54,11 +50,9 @@ contract('Payroll', function (accounts) {
 
   it("Test getPaid() by a non-employee", function () {
     var payroll;
-    return Payroll.deployed.call(owner, {from: owner, value: web3.toWei(fund, 'ether')}).then(instance => {
+    return Payroll.new.call(owner, {from: owner, value: web3.toWei(fund, 'ether')}).then(instance => {
       payroll = instance;
       return payroll.addEmployee(employee, salary, {from: owner});
-    }).then(() => {
-      return payroll.addFund({from: owner, value: web3.toWei(fund, 'ether')});
     }).then(() => {
       return payroll.calculateRunway();
     }).then(runwayRet => {

@@ -9,19 +9,19 @@ contract('Payroll', (accounts) => {
   let payroll;
 
   beforeEach("Setup contract for each test cases", () => {
-    return Payroll.deployed().then(instance => {
+    return Payroll.new().then(instance => {
       payroll = instance;
-      return payroll.addEmployee(employee, salary, { from: owner });
+      return payroll.addEmployee(employee, salary, {from: owner});
     });
   });
 
   it("Test call removeEmployee() by owner", () => {
     // Remove employee
-    return payroll.removeEmployee(employee, { from: owner });
+    return payroll.removeEmployee(employee, {from: owner});
   });
 
   it("Test call removeEmployee() by guest", () => {
-    return payroll.removeEmployee(employee, { from: guest }).then(() => {
+    return payroll.removeEmployee(employee, {from: guest}).then(() => {
       assert(false, "Should not be successful");
     }).catch(error => {
       assert.include(error.toString(), "Error: VM Exception", "Cannot call removeEmployee() by guest");

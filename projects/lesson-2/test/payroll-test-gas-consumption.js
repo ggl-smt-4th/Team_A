@@ -7,7 +7,7 @@ contract('Payroll', (accounts) => {
   let payroll;
 
   beforeEach("Setup contract for each test cases", () => {
-    return Payroll.deployed().then(instance => {
+    return Payroll.new().then(instance => {
       payroll = instance;
     });
   });
@@ -15,7 +15,7 @@ contract('Payroll', (accounts) => {
   let gasUsed = -1;
   it("Test gas consumption", async () => {
     for (let i = 1; i < 10; ++i) {
-      await payroll.addEmployee(accounts[i], salary, { from: owner });
+      await payroll.addEmployee(accounts[i], salary, {from: owner});
 
       // TODO: check right or not
       const result = await payroll.calculateRunway.estimateGas();
