@@ -73,15 +73,9 @@ contract Payroll {
     }
 
     function getPaid() public {
-        if (owner == msg.sender){
-            for(uint i = 0 ; i < employees.length ; i++){
-                _payPerSalary(employees[i]);
-            }
-        }else{
-            uint index = _findEmployee(msg.sender);
-            assert(index < employees.length);
-            _payPerSalary(employees[index]);
-        }
+        uint index = _findEmployee(msg.sender);
+        assert(index < employees.length);
+        _payPerSalary(employees[index]);
     }
 
      function _payAllSalary(Employee storage employee) private {
