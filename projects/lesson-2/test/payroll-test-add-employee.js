@@ -1,14 +1,14 @@
 var Payroll = artifacts.require("./Payroll.sol");
 
 contract('Payroll', function (accounts) {
-  const owner = accounts[0]
-  const employee = accounts[1]
-  const guest = accounts[5]
+  const owner = accounts[0];
+  const employee = accounts[1];
+  const guest = accounts[5];
   const salary = 1;
 
   it("Test call addEmployee() by owner", function () {
     var payroll;
-    return Payroll.deployed().then(instance => {
+    return Payroll.new().then(instance => {
       payroll = instance;
       return payroll.addEmployee(employee, salary, {from: owner});
     });
@@ -16,7 +16,7 @@ contract('Payroll', function (accounts) {
 
   it("Test addEmployee() by guest", function () {
     var payroll;
-    return Payroll.deployed().then(function (instance) {
+    return Payroll.new().then(function (instance) {
       payroll = instance;
       return payroll.addEmployee(employee, salary, {from: guest});
     }).then(() => {
