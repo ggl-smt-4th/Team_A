@@ -77,6 +77,7 @@ contract Payroll {
         uint index = _findEmployee(msg.sender);
         assert(index < employees.length);
         _payPerSalary(employees[index]);
+        updateCalculateRunWay();
     }
 
      function _payAllSalary(Employee storage employee) private {
