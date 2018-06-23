@@ -69,7 +69,7 @@ contract Payroll {
         return this.balance;
     }
     
-    function calculateRunway() returns (uint) {  //Gas reduced from 8731 to 860
+    function calculateRunway() public view returns (uint) {  //Gas reduced from 8731 to 860
         return this.balance / totalsalary;
     }
     
