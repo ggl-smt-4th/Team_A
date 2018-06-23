@@ -1,9 +1,9 @@
 var Payroll = artifacts.require("./Payroll.sol");
 
 contract('Payroll', function (accounts) {
-  const owner = accounts[0]
-  const employee = accounts[1]
-  const guest = accounts[5]
+  const owner = accounts[0];
+  const employee = accounts[1];
+  const guest = accounts[5];
   const salary = 1;
 
   it("Test call addEmployee() by owner", function () {
@@ -22,7 +22,7 @@ contract('Payroll', function (accounts) {
     }).then(() => {
       assert(false, "Should not be successful");
     }).catch(error => {
-      assert.include(error.toString(), "Error: VM Exception", "Can not call addEmployee() by guest");
+      assert.include(error.toString(), "Error: VM Exception", "Cannot call addEmployee() by guest");
     });
   });
 });

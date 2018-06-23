@@ -1,9 +1,9 @@
 var Payroll = artifacts.require("./Payroll.sol");
 
 contract('Payroll', function (accounts) {
-  const owner = accounts[0]
-  const employee = accounts[1]
-  const guest = accounts[5]
+  const owner = accounts[0];
+  const employee = accounts[1];
+  const guest = accounts[5];
   const salary = 1;
   const runway = 20;
   const payDuration = (30 + 1) * 86400;
