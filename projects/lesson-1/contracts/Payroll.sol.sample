@@ -1,0 +1,42 @@
+pragma solidity ^0.4.14;
+
+contract Payroll {
+    uint constant payDuration = 30 days;
+
+    address owner;
+    uint salary = 1 ether;
+    address employee;
+    uint lastPayday;
+
+    function updateEmployeeAddress(address newAddress) public {
+        // TODO: your code here
+    }
+
+    function updateEmployeeSalary(uint newSalary) public {
+        // TODO: your code here
+    }
+
+    function getEmployee() view public returns (address) {
+        return employee;
+    }
+
+    function addFund() payable public returns (uint) {
+        return address(this).balance;
+    }
+
+    function calculateRunway() view public returns (uint) {
+        return address(this).balance / salary;
+    }
+
+    function getSalary() view public returns (uint) {
+        return salary;
+    }
+
+    function hasEnoughFund() view public returns (bool) {
+        return calculateRunway() > 0;
+    }
+
+    function getPaid() public {
+        // TODO: your code here
+    }
+}
