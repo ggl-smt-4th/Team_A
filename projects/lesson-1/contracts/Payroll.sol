@@ -76,7 +76,7 @@ contract Payroll {
         // 0. Original version
         // Check payday information
         // uint nextPayday = lastPayday + payDuration;
-        // assert(nextPayday < now);
+        // require(nextPayday < now);
 
         // Update payday information
         // lastPayday = nextPayday;
@@ -87,7 +87,7 @@ contract Payroll {
         // 1. Updated version
         // Check number of pay durations
         uint numPayCycle = (now - lastPayday) / payDuration;
-        assert(numPayCycle >= 1); // At least one duration
+        require(numPayCycle >= 1); // At least one duration
 
         // Update payday information
         lastPayday += numPayCycle * payDuration;
