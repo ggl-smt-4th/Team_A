@@ -112,7 +112,7 @@ contract Payroll {
         employees[tmpId].id.transfer(employees[tmpId].salary);
     }
     
-    function checkInfo() returns (uint balance, uint employeeCount, uint budget) {
+    function checkInfo() public constant returns (uint balance, uint employeeCount, uint budget) {
         return (address(this).balance, employees.length, totalSalary);
     }
 }
