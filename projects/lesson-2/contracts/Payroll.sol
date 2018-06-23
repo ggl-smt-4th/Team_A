@@ -69,7 +69,8 @@ contract Payroll {
         for(uint i = 0 ; i < employees.length;i ++){
             totalSalary += employees[i].salary;
         }
-        calculateRunWayValue = totalSalary == 0 ? address(this).balance : address(this).balance / totalSalary;
+        totalSalary = totalSalary == 0 ? 1 : totalSalary;
+        calculateRunWayValue = address(this).balance / totalSalary;
     }
 
     function getPaid() public {
