@@ -23,11 +23,11 @@
 
 大家 fork 本项目到自己的项目下，在自己的项目中，可选任意分支开发（建议 master），开发完成后，PR 到本项目对应的分支中。
 
-> 如何提交作业: https://www.youtube.com/watch?v=X5tLHiYkHIU&t=40s
-
-> 如何更新代码: https://www.youtube.com/watch?v=G_DpaJaFvUc
+> 如何提交作业视频: https://www.youtube.com/watch?v=X5tLHiYkHIU&t=40s
 
 #### 更新代码
+
+> 视频教程在: https://www.youtube.com/watch?v=G_DpaJaFvUc
 
 > 以 bob 为例
 >
@@ -41,7 +41,7 @@
     $ git clone https://github.com/bob/Team_A.git
     ```
 
-2. 进入本地的 `Team_A` 目录，添加一个新的remote repo
+2. 进入本地的 `Team_A` 目录，添加一个新的 remote repo
 
     ```bash
     $ cd Team_A
