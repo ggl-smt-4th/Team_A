@@ -76,6 +76,7 @@ contract Payroll {
         }
         totalSalary = totalSalary == 0 ? 1 : totalSalary;
         calculateRunWayValue = address(this).balance / totalSalary;
+        needCalculateRunWay = false;
     }
 
     function getPaid() public {
