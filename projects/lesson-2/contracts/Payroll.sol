@@ -14,6 +14,7 @@ contract Payroll {
     Employee[] employees;
 
     uint calculateRunWayValue;
+    bool needCalculateRunWay;
 
 
     function Payroll() payable public {
@@ -25,7 +26,7 @@ contract Payroll {
         uint index = _findEmployee(employeeAddress);
         assert(index == employees.length);
         employees.push(Employee(employeeAddress,salary * 1 ether,now));
-        updateCalculateRunWay();
+        needCalculateRunWay = true;
     }
 
     function removeEmployee(address employeeId) public {
@@ -35,7 +36,7 @@ contract Payroll {
         _payAllSalary(employees[index]);
         employees[index] = employees[employees.length - 1];
         delete employees[employees.length - 1];
-        updateCalculateRunWay();
+        needCalculateRunWay = true;
     }
 
     function updateEmployee(address employeeAddress, uint salary) public {
@@ -49,14 +50,18 @@ contract Payroll {
         employee.addr = employeeAddress;
         employee.salary = salary * 1 ether;
         employee.lastPayDay = now;
-        updateCalculateRunWay();
+        needCalculateRunWay = true;
     }
 
     function addFund() payable public returns (uint) {
+        needCalculateRunWay = true;
         return address(this).balance;
     }
 
     function calculateRunway() public view returns (uint) {
+        if(needCalculateRunWay){
+            updateCalculateRunWay();
+        }
         return calculateRunWayValue;
     }
 
