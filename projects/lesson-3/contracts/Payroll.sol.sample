@@ -1,32 +1,36 @@
 pragma solidity ^0.4.14;
 
-contract Payroll {
+import './SafeMath.sol';
+import './Ownable.sol';
+
+contract Payroll is Ownable {
+
+    using SafeMath for uint;
 
     struct Employee {
-        // TODO: your code here
+        // TODO, your code here
     }
 
     uint constant payDuration = 30 days;
-
-    address owner;
-    Employee[] employees;
+    uint public totalSalary = 0;
 
     function Payroll() payable public {
-        owner = msg.sender;
+        // TODO: your code here
     }
 
-    function addEmployee(address employeeAddress, uint salary) public {
-        require(msg.sender == owner);
+    function addEmployee(address employeeId, uint salary) public {
         // TODO: your code here
     }
 
     function removeEmployee(address employeeId) public {
-        require(msg.sender == owner);
         // TODO: your code here
     }
 
-    function updateEmployee(address employeeAddress, uint salary) public {
-        require(msg.sender == owner);
+    function changePaymentAddress(address oldAddress, address newAddress) public {
+        // TODO: your code here
+    }
+
+    function updateEmployee(address employeeId, uint salary) public {
         // TODO: your code here
     }
 
@@ -39,11 +43,10 @@ contract Payroll {
     }
 
     function hasEnoughFund() public view returns (bool) {
-        return calculateRunway() > 0;
+        // TODO: your code here
     }
 
     function getPaid() public {
         // TODO: your code here
     }
 }
-
