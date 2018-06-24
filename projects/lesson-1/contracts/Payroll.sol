@@ -28,7 +28,7 @@ contract Payroll is Ownable {
     }
 
     modifier employeeValid(address employeeId) {
-        assert(employeeId != 0x0);
+        require(employeeId != 0x0);
         _;
     }
     
@@ -55,25 +55,25 @@ contract Payroll is Ownable {
         return this.balance;
     }
 
-    function calculateRunway() returns (uint) {
+    function calculateRunway() constant returns (uint) {
         return this.balance.div(employee.salary);
     }
 
-    function hasEnoughFund() returns (bool) {
+    function hasEnoughFund() constant returns (bool) {
         return calculateRunway() > 0;
     }
 
     function getPaid() employeeValid(msg.sender) {
-        assert(employee.id == msg.sender);
+        require(employee.id == msg.sender);
 
         uint nextPayday = employee.lastPayday.add(payDuration);
-        assert(nextPayday < now);
+        require(nextPayday < now);
 
         employee.lastPayday = nextPayday;
         employee.id.transfer(employee.salary);
     }
     
-    function checkInfo() returns (uint balance, address id, uint salary, uint date) {
+    function checkInfo() constant returns (uint balance, address id, uint salary, uint date) {
         balance = this.balance;
         id = employee.id;
         salary = employee.salary;
