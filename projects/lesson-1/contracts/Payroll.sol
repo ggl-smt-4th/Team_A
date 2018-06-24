@@ -1,44 +1,44 @@
 pragma solidity ^0.4.14;
 
 contract Payroll {
-    uint constant payDuration = 10 seconds; // while 'constant' serves as only 
-                                            // a visual signal for functions,  
-                                            // it DOES have real constraints 
-                                            // on variables.
-    address employer;
+
+    uint constant payDuration = 30 days;
+
+    address owner;
     uint salary = 1 ether;
     address employee;
     uint lastPayday;
 
-    function Payroll() payable public { // only functions modified with 
-                                        // 'payable' can receive money
-        employer = msg.sender;
+    function Payroll() payable public {
+        owner = msg.sender;
         lastPayday = now;
     }
 
-    // pay remaining salary before updating employee's address or salary
-    function payRemaining() internal {
-        if (employee != 0x0){
-            uint payment = salary * ((now - lastPayday) / payDuration);
+    function doUpdateEmployee(address newAddress, uint newSalary) internal {
+        if (employee != 0x0) {
+            uint payment = salary * (now - lastPayday) / payDuration;
             employee.transfer(payment);
         }
+
+        employee = newAddress;
+        salary = newSalary;
         lastPayday = now;
     }
 
     function updateEmployeeAddress(address newAddress) public {
-        require(msg.sender == employer);
-        require(newAddress != employer);
-        payRemaining();
-        employee = newAddress;
+        require(msg.sender == owner);
+        require(newAddress != employee);
+
+        doUpdateEmployee(newAddress, salary);
     }
 
     function updateEmployeeSalary(uint newSalary) public {
-        require(msg.sender == employer);
+        require(msg.sender == owner);
         require(newSalary > 0);
         newSalary = newSalary * 1 ether;
         require(newSalary != salary);
-        payRemaining();
-        salary = newSalary;
+
+        doUpdateEmployee(employee, newSalary);
     }
 
     function getEmployee() view public returns (address) {
@@ -58,23 +58,20 @@ contract Payroll {
     }
 
     function hasEnoughFund() view public returns (bool) {
-        return calculateRunway() > 0;   // do NOT call with 'this' keyword, 
-                                        // which will pay much gas
+        return calculateRunway() > 0;
+    }
+
+    function isMe() view public returns (bool) {
+        return msg.sender == employee;
     }
 
     function getPaid() public {
-        require(msg.sender == employee);    // only the right employee can 
-                                            // call this function to get 
-                                            // himself paid
-        uint nextPayday = lastPayday + payDuration; // calculate this sum only 
-                                                    // once to avoid the gas 
-                                                    // overhead of repetitive 
-                                                    // computation
+        require(msg.sender == employee);
+
+        uint nextPayday = lastPayday + payDuration;
         assert(nextPayday < now);
-        // ORDER matters here (re-entry attack?): need to change internal 
-        // variables first, then transfer monay to outer world
+
         lastPayday = nextPayday;
-        employee.transfer(salary);  // 'transfer' will throw exception, 
-                                    // while 'send' will not
+        employee.transfer(salary);
     }
 }
