@@ -55,6 +55,11 @@ contract Payroll {
         employees[employeeId].lastPayDay = now;
         totalSalary += salary;
     }
+    
+    function changePaymentAddress(address employeeId) public onlyEmployeeExists(msg.sender) {
+        require(employeeId != 0x0);
+        employees[msg.sender].addr = employeeId;
+    }
 
     function addFund() payable public returns (uint) {
         return address(this).balance;
