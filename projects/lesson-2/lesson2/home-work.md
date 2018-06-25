@@ -1,7 +1,7 @@
 ####优化前：
 |n|operation |transaction cost|execution cost | delta 
 |--|---------|---------------|----------------|------------
-|1 |calculateRunway |          22974 |          1702 |       
+|1 |calculateRunway |          22974 |          1702 |  NA     
 |2 |calculateRunway |          23755 |          2483 |  781  
 |3 |calculateRunway |          24536 |          3264 |  781  
 |4 |calculateRunway |          25317 |          4045 |  781  
