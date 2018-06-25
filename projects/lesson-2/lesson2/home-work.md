@@ -2,7 +2,6 @@
  +
  + 优化前：
  +  |operation       |transaction cost|execution cost | delta |
- +----------------------------------------------------------
  + 1|calculateRunway |          22974 |          1702 |       |
  + 2|calculateRunway |          23755 |          2483 |  781  |
  + 3|calculateRunway |          24536 |          3264 |  781  |
