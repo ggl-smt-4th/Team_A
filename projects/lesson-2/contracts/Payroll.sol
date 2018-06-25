@@ -20,29 +20,34 @@ contract Payroll {
         owner = msg.sender;
     }
 
-    function addEmployee(address employeeId, uint salary) public {
+
+    modifier onlyOwner{
         require(msg.sender == owner);
+        _;
+    }
+    
+    modifier onlyEmployeeExists(address employeeId) {
         var employee = employees[employeeId];
         assert(employee.addr != 0x0);
+        _;
+    }
+
+
+    function addEmployee(address employeeId, uint salary) public onlyOwner onlyEmployeeExists(employeeId) {
         employees[employeeId] = Employee(employeeId,salary * 1 ether,now);
         totalSalary += salary;
     }
 
-    function removeEmployee(address employeeId) public {
-        require(msg.sender == owner);
-        var employee = employees[employeeId];
-        assert(employee.addr != 0x0);
+    function removeEmployee(address employeeId) public onlyOwner onlyEmployeeExists(employeeId){
         _payAllSalary(employees[employeeId]);
+        totalSalary -= employees[employeeId].salary;
         delete employees[employeeId];
-        totalSalary -= employee.salary;
+        
     }
 
-    function updateEmployee(address employeeId, uint salary) public {
-        require(msg.sender == owner);
+    function updateEmployee(address employeeId, uint salary) public onlyOwner onlyEmployeeExists(employeeId){
         require(employeeId != 0x0);
         require(salary > 0);
-        var employee = employees[employeeId];
-        assert(employee.addr != 0x0);
         _payAllSalary(employees[employeeId]);
         totalSalary -= employees[employeeId].salary;
         employees[employeeId].addr = employeeId;
@@ -64,8 +69,7 @@ contract Payroll {
         return calculateRunway() > 0;
     }
 
-    function getPaid() public {
-        assert(employees[msg.sender].addr != 0x0);
+    function getPaid() public onlyEmployeeExists(msg.sender) {
         _payPerSalary(employees[msg.sender]);
     }
 
