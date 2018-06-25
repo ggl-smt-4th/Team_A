@@ -1,6 +1,6 @@
 +    依照第二课视频的样例代码可得到依次添加几个employee后相应的calculateRunway()的相应花销如下：
  +
- +优化前：
+ + 优化前：
  +  |operation       |transaction cost|execution cost | delta
  +----------------------------------------------------------
  + 1|calculateRunway |          22974 |          1702 |  
