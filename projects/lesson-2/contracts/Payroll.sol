@@ -66,7 +66,7 @@ contract Payroll {
         return address(this).balance;
     }
 
-    function calculateRunway() returns (uint) {
+    function calculateRunway() public view returns (uint) {
         return this.balance / totalSalary;
     }
 
