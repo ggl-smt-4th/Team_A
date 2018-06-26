@@ -51,6 +51,7 @@ contract Payroll {
         employees.length -=1;
     }
     
+    
     function updateEmployee(address employeeId, uint salary) public {
         require(msg.sender == owner);
         var (employee, index) = _findEmployee(employeeId);
