@@ -11,9 +11,9 @@ contract Payroll {
 
     address owner;
     Employee[] employees;
-    uint totalSalary;
+    uint totalSalary = 0 ether;
 
-    function Payroll() {
+    function Payroll() payable public {
         owner = msg.sender;
     }
     
@@ -30,16 +30,16 @@ contract Payroll {
         }
     }
 
-    function addEmployee(address employeeId, uint salary) {
+    function addEmployee(address employeeId, uint salary) public {
         require(msg.sender == owner);
         var (employee, index) = _findEmployee(employeeId);
         assert(employee.id == 0x0);
-        salary *= 1 ether;
+       
         employees.push(Employee(employeeId, salary, now));
-        totalSalary += salary;
+        totalSalary += salary * 1 ether;
     }
 
-    function removeEmployee(address employeeId) {
+    function removeEmployee(address employeeId) public {
         require(msg.sender == owner);
         var (employee, index) = _findEmployee(employeeId);
         assert(employee.id != 0x0);
@@ -51,20 +51,18 @@ contract Payroll {
         employees.length -=1;
     }
     
-    function updateEmployee(address employeeAddress, uint salary) {
+    function updateEmployee(address employeeId, uint salary) public {
         require(msg.sender == owner);
-        var (employee, index) = _findEmployee(employeeAddress);
+        var (employee, index) = _findEmployee(employeeId);
         assert(employee.id != 0x0);
         
         _partialPaid(employee);
-        employees[index].id = employeeAddress;
-        salary *= 1 ether;
-        totalSalary = totalSalary - employees[index].salary + salary;
-        employees[index].salary = salary;
-        
+        totalSalary += (salary * 1 ether - employee.salary);
+        employees[index].salary = salary * 1 ether;
+        employees[index].lastPayday = now;
     }
 
-    function addFund() payable returns (uint) {
+    function addFund() payable public returns (uint) {
         return address(this).balance;
     }
 
@@ -72,13 +70,14 @@ contract Payroll {
         return this.balance / totalSalary;
     }
 
-    function hasEnoughFund() returns (bool) {
+    function hasEnoughFund() public view returns (bool) {
         return calculateRunway() > 0;
     }
 
-    function getPaid() {
+    function getPaid() public {
         var (employee, index) = _findEmployee(msg.sender);
         assert(employee.id != 0x0);
+        require(this.balance >= employee.salary);
         
         uint nextPayday = employee.lastPayday + payDuration;
         assert(nextPayday < now);
