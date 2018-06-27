@@ -15,7 +15,7 @@ contract Payroll is Ownable {
 
     uint constant payDuration = 30 days;
     uint public totalSalary = 0;
-	  mapping(address => Employee) public employees;
+    mapping(address => Employee) public employees;
 	
     modifier employeeExist(address employeeId) {
         var employee = employees[employeeId];
@@ -24,12 +24,12 @@ contract Payroll is Ownable {
     }
     
     // set function _partialPaid as a modifier
-	  modifier _partialPaid(address employeeId){
-		    var employee = employees[employeeId];
-		    uint payment = employee.salary * (now - employee.lastPayday) / payDuration;
+    modifier _partialPaid(address employeeId){
+	var employee = employees[employeeId];
+        uint payment = employee.salary * (now - employee.lastPayday) / payDuration;
         employee.id.transfer(payment);
-		    _;
-	  }
+        _;
+    }
 	
     function addEmployee(address employeeId, uint salary) onlyOwner public {
         var employee = employees[employeeId];
@@ -46,8 +46,8 @@ contract Payroll is Ownable {
 
     // pay to the old address, generate a new address, then delete the old address
     function changePaymentAddress(address oldAddress, address newAddress) onlyOwner employeeExist(oldAddress) _partialPaid(oldAddress) public {		
-		    employees[newAddress] = Employee(newAddress, employees[oldAddress].salary, now);
-		    delete employees[oldAddress];
+        employees[newAddress] = Employee(newAddress, employees[oldAddress].salary, now);
+        delete employees[oldAddress];
     }
 
     function updateEmployee(address employeeId, uint salary) onlyOwner employeeExist(employeeId) _partialPaid(employeeId) public { 
