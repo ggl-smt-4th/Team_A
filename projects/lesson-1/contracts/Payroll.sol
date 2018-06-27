@@ -1,6 +1,7 @@
 pragma solidity ^0.4.14;
 
 contract Payroll {
+
     uint constant payDuration = 30 days;
 
     address owner;
@@ -8,45 +9,36 @@ contract Payroll {
     address employee;
     uint lastPayday;
 
-    constructor() public {
+    function Payroll() payable public {
         owner = msg.sender;
+        lastPayday = now;
     }
 
-    function updateEmployeeAddress(address e) public {
-        // Sender should be the owner
-        require(msg.sender == owner);
-
-        // Check if addresses are the same
-        require(e != employee);
-
+    function doUpdateEmployee(address newAddress, uint newSalary) internal {
         if (employee != 0x0) {
-            // Pay salary before change an existing employee
             uint payment = salary * (now - lastPayday) / payDuration;
             employee.transfer(payment);
         }
 
-        // Update employee
-        employee = e;
-        salary = 1 ether; // Default salary
+        employee = newAddress;
+        salary = newSalary;
         lastPayday = now;
     }
 
-    function updateEmployeeSalary(uint s) public {
-        // Sender should be the owner
+    function updateEmployeeAddress(address newAddress) public {
         require(msg.sender == owner);
+        require(newAddress != employee);
 
-        // Check salary range
-        require(s > 0);
+        doUpdateEmployee(newAddress, salary);
+    }
 
-        if (employee != 0x0) {
-            // Pay salary before change an existing employee
-            uint payment = salary * (now - lastPayday) / payDuration;
-            employee.transfer(payment);
-        }
+    function updateEmployeeSalary(uint newSalary) public {
+        require(msg.sender == owner);
+        require(newSalary > 0);
+        newSalary = newSalary * 1 ether;
+        require(newSalary != salary);
 
-        // Update salary
-        salary = s * 1 ether;
-        lastPayday = now;
+        doUpdateEmployee(employee, newSalary);
     }
 
     function getEmployee() view public returns (address) {
@@ -69,30 +61,17 @@ contract Payroll {
         return calculateRunway() > 0;
     }
 
+    function isMe() view public returns (bool) {
+        return msg.sender == employee;
+    }
+
     function getPaid() public {
-        // Sender should be the employee
         require(msg.sender == employee);
 
-        // 0. Original version
-        // Check payday information
-        // uint nextPayday = lastPayday + payDuration;
-        // require(nextPayday < now);
+        uint nextPayday = lastPayday + payDuration;
+        assert(nextPayday < now);
 
-        // Update payday information
-        // lastPayday = nextPayday;
-
-        // Transfer salary
-        // employee.transfer(salary);
-
-        // 1. Updated version
-        // Check number of pay durations
-        uint numPayCycle = (now - lastPayday) / payDuration;
-        require(numPayCycle >= 1); // At least one duration
-
-        // Update payday information
-        lastPayday += numPayCycle * payDuration;
-
-        // transfer salary
-        employee.transfer(salary * numPayCycle);
+        lastPayday = nextPayday;
+        employee.transfer(salary);
     }
 }
