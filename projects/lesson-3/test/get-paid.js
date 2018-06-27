@@ -20,7 +20,7 @@ contract('Payroll', function (accounts) {
       if (!runwayRet.toNumber || typeof runwayRet.toNumber !== "function") {
         assert(false, "the function `calculateRunway()` should be defined as: `function calculateRunway() public view returns (uint)` | `calculateRunway()` 应定义为: `function calculateRunway() public view returns (uint)`");
       }
-      assert.equal(runwayRet.toNumber(), runway, "Try addFund() fail, runway is not right");
+      assert.equal(runwayRet.toNumber(), runway, "Runway is wrong");
       return web3.currentProvider.send({jsonrpc: "2.0", method: "evm_increaseTime", params: [payDuration], id: 0});
     }).then(() => {
       return payroll.getPaid({from: employee})
@@ -39,7 +39,7 @@ contract('Payroll', function (accounts) {
     }).then(() => {
       return payroll.calculateRunway();
     }).then(runwayRet => {
-      assert.equal(runwayRet.toNumber(), runway, "Try addFund() fail, runway is not right");
+      assert.equal(runwayRet.toNumber(), runway, "Runway is wrong");
       return payroll.getPaid({from: employee})
     }).then((getPaidRet) => {
       assert(false, "Should not be successful");
@@ -56,7 +56,7 @@ contract('Payroll', function (accounts) {
     }).then(() => {
       return payroll.calculateRunway();
     }).then(runwayRet => {
-      assert.equal(runwayRet.toNumber(), runway, "Try addFund() fail, runway is not right");
+      assert.equal(runwayRet.toNumber(), runway, "Runway is wrong");
       return payroll.getPaid({from: guest})
     }).then((getPaidRet) => {
       assert(false, "Should not be successful");
