@@ -31,7 +31,7 @@ contract Payroll is Ownable {
 	_;
     }
 	
-    function addEmployee(address employeeId, uint salary) onlyOwner public {
+    function addEmployee(address employeeId, uint salary) public onlyOwner {
         var employee = employees[employeeId];
         assert(employee.id == 0x0);
         
@@ -40,7 +40,7 @@ contract Payroll is Ownable {
         totalSalary = totalSalary.add(salary);
     }
 
-    function removeEmployee(address employeeId) onlyOwner employeeExist(employeeId) _partialPaid(employeeId) public {       
+    function removeEmployee(address employeeId) public onlyOwner employeeExist(employeeId) _partialPaid(employeeId) {       
         totalSalary = totalSalary.sub(employees[employeeId].salary);
         delete employees[employeeId];
     }
@@ -51,7 +51,7 @@ contract Payroll is Ownable {
         delete employees[oldAddress];
     }
 
-    function updateEmployee(address employeeId, uint salary) onlyOwner employeeExist(employeeId) _partialPaid(employeeId) public { 
+    function updateEmployee(address employeeId, uint salary) public onlyOwner employeeExist(employeeId) _partialPaid(employeeId) { 
         salary = salary.mul(1 ether);
 	totalSalary = totalSalary.sub(employees[employeeId].salary);
         employees[employeeId].salary = salary;
@@ -71,7 +71,7 @@ contract Payroll is Ownable {
         return calculateRunway() > 0;
     }
 
-    function getPaid() employeeExist(msg.sender) public{
+    function getPaid() public employeeExist(msg.sender) {
         require(this.balance >= employees[msg.sender].salary);
         
         uint nextPayday = employees[msg.sender].lastPayday.add(payDuration);
