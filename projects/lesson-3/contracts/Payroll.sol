@@ -10,6 +10,9 @@ contract Payroll is Ownable {
         uint salary;
         uint lastPayday;
     }
+    function Payroll() payable public Ownable() {
+        
+    }
     
     uint constant payDuration = 30 days;
     
