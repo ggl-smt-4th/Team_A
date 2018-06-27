@@ -3,7 +3,7 @@ pragma solidity ^0.4.14;
 import './SafeMath.sol';
 import './Ownable.sol';
 
-contract Payroll is payable Ownable {
+contract Payroll is Ownable {
 
     using SafeMath for uint;
 
@@ -16,7 +16,11 @@ contract Payroll is payable Ownable {
     uint constant payDuration = 30 days;
     uint public totalSalary = 0;
     mapping(address => Employee) public employees;
-	
+
+    function Payroll() payable public {
+        owner = msg.sender;
+    }
+    
     modifier employeeExist(address employeeId) {
         var employee = employees[employeeId];
         assert(employee.id != 0x0);
