@@ -52,8 +52,9 @@ contract Payroll is Ownable {
     }
 
     function updateEmployee(address employeeId, uint salary) onlyOwner employeeExist(employeeId) _partialPaid(employeeId) public { 
-        totalSalary = totalSalary.sub(employees[employeeId].salary);
-        employees[employeeId].salary = salary.mul(1 ether);
+        salary = salary.mul(1 ether);
+	totalSalary = totalSalary.sub(employees[employeeId].salary);
+        employees[employeeId].salary = salary;
 	totalSalary = totalSalary.add(employees[employeeId].salary);
         employees[employeeId].lastPayday = now;
     }
@@ -71,13 +72,12 @@ contract Payroll is Ownable {
     }
 
     function getPaid() employeeExist(msg.sender) public{
-        var employee = employees[msg.sender];
-        require(this.balance >= employee.salary);
+        require(this.balance >= employees[msg.sender].salary);
         
-        uint nextPayday = employee.lastPayday.add(payDuration);
+        uint nextPayday = employees[msg.sender].lastPayday.add(payDuration);
         assert(nextPayday < now);
         
         employees[msg.sender].lastPayday = nextPayday;
-        employee.id.transfer(employee.salary);
+        employees[msg.sender].id.transfer(employees[msg.sender].salary);
     }
 }
