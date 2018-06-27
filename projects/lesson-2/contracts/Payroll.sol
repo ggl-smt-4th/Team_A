@@ -38,7 +38,7 @@ pragma solidity ^0.4.14;
          var (employee, index)  = _findEmployee(employeeAddress); 
          assert(employee.id == 0x0);
  
-         totalSalary += salary;///
+         totalSalary += salary * 1 ether;///
          employees.push(Employee(employeeAddress, salary * 1 ether, now));
      }
  
