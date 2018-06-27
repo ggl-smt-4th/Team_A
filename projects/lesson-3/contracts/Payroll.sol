@@ -79,7 +79,7 @@ contract Payroll is Ownable {
         uint nextPayday = employee.lastPayday.add(payDuration);
         assert(nextPayday < now);
 
-        employee.lastPayday = nextPayday;
+        employees[msg.sender].lastPayday = nextPayday;
         employee.id.transfer(employee.salary);
     }
 }
