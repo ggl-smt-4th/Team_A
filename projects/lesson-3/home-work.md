@@ -1,25 +1,25 @@
 C3 Linearization:
   
   contract O  
-  contract A is O
-  contract B is O
-  contract C is O
-  contract K1 is A, B
-  contract K2 is A, C
-  contract Z is K1, K2
+  contract A is O  
+  contract B is O  
+  contract C is O  
+  contract K1 is A, B  
+  contract K2 is A, C  
+  contract Z is K1, K2  
   
   求contract Z的继承栈.
   
-  根据C3 Linearization算法, 过程及结果如下：
-  L(O) := {O}                                   // O has no parents
-  L(A) := {A} + merge(L(O), {O})    
-        = {A} + merge({O}, {O})                 // choose O, succeed
-        = {A, O}
-  L(B) := {B} + merge(L(O), {O})    
-        = {B} + merge({O}, {O})                 // choose O, succeed
-        = {B, O}
-  L(C) := {C} + merge(L(O), {O})    
-        = {C} + merge({O}, {O})                 // choose O, succeed
+  根据C3 Linearization算法, 过程及结果如下：  
+  L(O) := {O}                                   // O has no parents  
+  L(A) := {A} + merge(L(O), {O})      
+        = {A} + merge({O}, {O})                 // choose O, succeed  
+        = {A, O}  
+  L(B) := {B} + merge(L(O), {O})      
+        = {B} + merge({O}, {O})                 // choose O, succeed  
+        = {B, O}  
+  L(C) := {C} + merge(L(O), {O})  
+        = {C} + merge({O}, {O})                 // choose O, succeed  
         = {C, O}
   L(K1):= {K1} + merge(L(A), L(B), {A, B})     
         = {K1} + merge({A, O}, {B, O}, {A, B})  // choose A, succeed
