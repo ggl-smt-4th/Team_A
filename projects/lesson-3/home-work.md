@@ -1,6 +1,6 @@
 C3 Linearization:
   
-  contract O
+  contract O  
   contract A is O
   contract B is O
   contract C is O
