@@ -25,22 +25,23 @@ contract Payroll is Ownable {
     
     // set function _partialPaid as a modifier
     modifier _partialPaid(address employeeId){
-	var employee = employees[employeeId];
-        uint payment = employee.salary * (now - employee.lastPayday) / payDuration;
+        var employee = employees[employeeId];
+	uint payment = employee.salary.mul((now - employee.lastPayday).div(payDuration));
         employee.id.transfer(payment);
-        _;
+	_;
     }
 	
     function addEmployee(address employeeId, uint salary) onlyOwner public {
         var employee = employees[employeeId];
         assert(employee.id == 0x0);
         
-        employees[employeeId] = Employee(employeeId, salary * 1 ether, now);
-        totalSalary += salary * 1 ether;
+        salary = salary.mul(1 ether);
+        employees[employeeId] = Employee(employeeId, salary, now);
+        totalSalary = totalSalary.add(salary);
     }
 
     function removeEmployee(address employeeId) onlyOwner employeeExist(employeeId) _partialPaid(employeeId) public {       
-        totalSalary -= employees[employeeId].salary;
+        totalSalary = totalSalary.sub(employees[employeeId].salary);
         delete employees[employeeId];
     }
 
@@ -51,9 +52,9 @@ contract Payroll is Ownable {
     }
 
     function updateEmployee(address employeeId, uint salary) onlyOwner employeeExist(employeeId) _partialPaid(employeeId) public { 
-        totalSalary -= employees[employeeId].salary;
-        employees[employeeId].salary = salary * 1 ether;
-		    totalSalary += employees[employeeId].salary;
+        totalSalary = totalSalary.sub(employees[employeeId].salary);
+        employees[employeeId].salary = salary.mul(1 ether);
+	totalSalary = totalSalary.add(employees[employeeId].salary);
         employees[employeeId].lastPayday = now;
     }
 
@@ -62,7 +63,7 @@ contract Payroll is Ownable {
     }
 
     function calculateRunway() public view returns (uint) {
-        return this.balance / totalSalary; 
+        return this.balance.div(totalSalary); 
     }
 
     function hasEnoughFund() public view returns (bool) {
@@ -71,9 +72,9 @@ contract Payroll is Ownable {
 
     function getPaid() employeeExist(msg.sender) public{
         var employee = employees[msg.sender];
-        require(address(this).balance >= employee.salary);
+        require(this.balance >= employee.salary);
         
-        uint nextPayday = employee.lastPayday + payDuration;
+        uint nextPayday = employee.lastPayday.add(payDuration);
         assert(nextPayday < now);
         
         employees[msg.sender].lastPayday = nextPayday;
