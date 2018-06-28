@@ -22,7 +22,7 @@ contract('Payroll', (accounts) => {
       if (i == 1) {
         gasUsed = result;
       } else {
-        assert(gasUsed == result, "Gas consumption for each addEmployee() transaction should remain the same");
+        assert(gasUsed == result, "Gas consumption for each calculateRunway() transaction should remain the same");
       }
     }
   });
