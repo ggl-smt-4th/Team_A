@@ -14,35 +14,47 @@ contract('Test remove employee in Payrool',function(accounts){
 
 	const totalFund = 10 ;
 
+	var payrool;
 	it ('remove a employee by owner',function(){
-		var payrool;
 		return Payroll.deployed()
 				.then(function(instance){
 					payrool = instance;
 					return payrool.addEmployee(employeeOne,salaryOne,{from:owner});
 				})
 				.then(function(){
-					console.log('log start ---');
 					return payrool.removeEmployee(employeeOne,{from:owner});
+				})
+				.then(function(){
+					return payrool.employees.call(employeeOne);
+				})
+				.then(function(employees){
+					var employeeId = employees[0];
+					assert.equal(employeeId,0,"employee remove failed");
 				});
-				// .then(function(){
-				// 	console.log('log start ---');
-				// 	// return null;
-				// });
-				// .then(function(){
-				// 	var employees = payrool.employees;
-				// 	console.log(employees);
-				// 	return employees;
-				// })
-				// .then(function(){
-				// 	var employee = employees.call(employeeOne);
-				// 	console.log(employee);
-				// 	return employee.addr;
-				// })
-				// .then((employeeId)=>{
-				// 	assert.equal(employeeId.toString(),employeeOne,"Remove failed");
-				// });
 	});
+
+
+	it('remove a employee by guest',
+		function(){
+			return payrool.removeEmployee(employeeOne,{from:guest})
+			.then(()=> {
+				assert(false,'Should not Successful');
+			}).catch(error => {
+				assert.include(error.toString(), "Error: VM Exception", "Can not remove not exists Employee");
+			});
+		});
+
+	it('remove a not exists employee by owner',
+		function(){
+			return payrool.removeEmployee(employeeTwo,{from:owner})
+			.then(()=> {
+				assert(false,'Should not Successful');
+			}).catch(error => {
+				assert.include(error.toString(), "Error: VM Exception", "Can not remove not exists Employee");
+			});
+		});
+
+
 
 
 });
