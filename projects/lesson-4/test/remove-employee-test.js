@@ -24,12 +24,13 @@ contract('Test remove employee in Payrool',function(accounts){
 				.then(function(){
 					return payrool.removeEmployee(employeeOne,{from:owner});
 				})
-				.then(function(){
-					return payrool.employees.call(employeeOne);
-				})
+				// .then(function(){
+				// 	return payrool.employees.call(employeeOne);
+				// })
 				.then(function(employees){
-					var employeeId = employees[0];
-					assert.equal(employeeId,0,"employee remove failed");
+					var length = payrool.employees.length;
+					// console.log(length);
+					assert.equal(length,0,"employee remove failed");
 				});
 	});
 
