@@ -20,13 +20,18 @@ contract Payroll is Ownable {
     mapping(address => Employee) public employees;
 
     modifier employeeExist(address employeeId) {
-    	var employee = employees[employeeId];
-    	require(employee.id != 0x0);
-    	_;
+        assert(employees[employeeId].lastPayday != 0);
+        _;
+    }
+
+    modifier employeeNotExist(address employeeId) {
+        assert(employees[employeeId].lastPayday == 0);
+        _;
     }
 
     function Payroll() payable public {
         // TODO: your code here
+        owner = msg.sender;
     }
 
     function _partialPaid(address employeeId) private employeeExist(employeeId) {
@@ -36,7 +41,7 @@ contract Payroll is Ownable {
         employees[employeeId].id.transfer(payment);
     }
 
-    function addEmployee(address employeeId, uint salary) public onlyOwner {
+    function addEmployee(address employeeId, uint salary) public onlyOwner employeeNotExist(employeeId){
         // TODO: your code here
         salary = salary.mul(1 ether);
         employees[employeeId] = Employee(employeeId, salary, now);
@@ -49,13 +54,13 @@ contract Payroll is Ownable {
         // TODO: your code here
         _partialPaid(employeeId);
         uint salary = employees[employeeId].salary;
-        delete employees[employeeId];
-
         totalSalary = totalSalary.sub(salary);
         totalEmployee = totalEmployee.sub(1);
+
+        delete employees[employeeId];
     }
 
-    function changePaymentAddress(address oldAddress, address newAddress) public onlyOwner employeeExist(oldAddress) {
+    function changePaymentAddress(address oldAddress, address newAddress) public onlyOwner employeeExist(oldAddress) employeeNotExist(newAddress) {
         // TODO: your code here
         _partialPaid(oldAddress);
         employees[newAddress] = Employee(newAddress, employees[oldAddress].salary, now);
