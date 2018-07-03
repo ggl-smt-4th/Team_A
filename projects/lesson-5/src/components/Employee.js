@@ -3,7 +3,7 @@ import { Card, Col, Row, Layout, Alert, message, Button } from 'antd';
 
 import Common from './Common';
 
-class Employer extends Component {
+class Employee extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -64,4 +64,4 @@ class Employer extends Component {
   }
 }
 
-export default Employer
+export default Employee
