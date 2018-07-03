@@ -44,19 +44,23 @@ class Common extends Component {
 
   getEmployerInfo = () => {
     const { payroll, account, web3 } = this.props;
-    payroll.getEmployerInfo.call({
-      from: account,
-    }).then((result) => {
-      this.setState({
-        balance: web3.fromWei(result[0].toNumber()),
-        runway: result[1].toNumber(),
-        employeeCount: result[2].toNumber()
-      })
-    });
+    // payroll.getEmployerInfo.call({
+    //   from: account,
+    // }).then((result) => {
+
+    //   console.log('51-result:'+result);
+
+    //   this.setState({
+    //     balance: web3.fromWei(result[0].toNumber()),
+    //     runway: result[1].toNumber(),
+    //     employeeCount: result[2].toNumber()
+    //   });
+    // });
   }
 
   render() {
     const { runway, balance, employeeCount } = this.state;
+    console.log('runway:'+runway + '--balance:' + balance + '--employeeCount:' + employeeCount)
     return (
       <div>
         <h2>通用信息</h2>
