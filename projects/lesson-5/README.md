@@ -14,7 +14,7 @@ Docker image 已经有可运行项目的所有依赖，`projects/lesson-5` 文�
 
 3. 另开一个终端，cd 到项目根目录，`bash manager.sh attach` 进入到窗口，然后 cd 到 `lesson-5` 目录：
 
-    1. `truffle complie`
+    1. `truffle compile`
     2. `truffle migrate --reset`
     3. `npm run start`
 
