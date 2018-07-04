@@ -65,15 +65,68 @@ class EmployeeList extends Component {
   }
 
   loadEmployees(employeeCount) {
+    const { payroll, account, web3 } = this.props;
+    var employees = [];
+    for(let index = 0; index < employeeCount; index++){
+      payroll.getEmployeeInfo(index,{
+        from:account
+      }).then(result =>{
+        var temp = {
+          key:result[0],
+          address:result[0],
+          salary:web3.fromWei(result[1].toNumber()),
+          lastPaidDay:new Date(result[2].toNumber() * 1000 ).toString()
+        };
+        console.log(temp);
+        employees.push(temp);
+        this.setState({
+          employees:employees,
+          loading:false
+        });
+      })
+    }
+    
   }
 
   addEmployee = () => {
+    const { payroll, account, web3 } = this.props;
+    const {employeeId , salary} = this.state;
+    console.log('addEmployee --'+account);
+    console.log('addEmployee -- address:'+this.state.address);
+    console.log('addEmployee -- salary:'+salary);
+    payroll.addEmployee(
+      this.state.address
+      ,web3.toWei(salary)
+      ,{
+        from:account,
+        gas:1000000
+      }).then(()=>{
+        alert('success');
+      }).catch(error=>{
+        alert(error);
+      });
   }
 
   updateEmployee = (address, salary) => {
+    console.log('updateEmployee--'+address + '---' + salary);
+    const { payroll, account, web3 } = this.props;
+    console.log('account:'+account);
+      payroll.updateEmployee(address,salary,{
+        from:account,
+        gas:1000000
+      }).then(()=>{
+        alert('success');
+      });
   }
 
   removeEmployee = (employeeId) => {
+    const { payroll, account, web3 } = this.props;
+      payroll.removeEmployee(employeeId,{
+        from:account,
+        gas:1000000
+      }).then(()=>{
+        alert('success');
+      });
   }
 
   renderModal() {

@@ -20,17 +20,12 @@ class Employer extends Component {
     console.log('Employer.js 20--:'+account);
     payroll.owner.call({
       from:account
-    }).then((res)=>{
-      console.log(res);
+    }).then((result)=>{
+      console.log('24---'+result);
+      this.setState({
+        owner: result
+      });
     });
-    // payroll.owner.call({
-    //   from: account
-    // }).then((result) => {
-    //   console.log('Employer.js 24:'+result[0]);
-    //   this.setState({
-    //     owner: result[0]
-    //   });
-    // });
   }
 
   onSelectTab = ({key}) => {
