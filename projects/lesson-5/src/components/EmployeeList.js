@@ -102,6 +102,7 @@ class EmployeeList extends Component {
         gas:1000000
       }).then(()=>{
         alert('success');
+        this.setState({showModal: false});
       }).catch(error=>{
         alert(error);
       });
