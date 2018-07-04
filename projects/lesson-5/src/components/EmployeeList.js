@@ -49,7 +49,7 @@ class EmployeeList extends Component {
 
   componentDidMount() {
     const { payroll, account, web3 } = this.props;
-    payroll.checkInfo.call({
+    payroll.getEmployerInfo.call({
       from: account
     }).then((result) => {
       const employeeCount = result[2].toNumber();
@@ -70,7 +70,7 @@ class EmployeeList extends Component {
     const requests = [];
 
     for (let index =0; index < employeeCount; index++) {
-      requests.push(payroll.checkEmployee.call(index, {
+      requests.push(payroll.getEmployeeInfo.call(index, {
         from: account
       }));
     }
@@ -95,7 +95,7 @@ class EmployeeList extends Component {
     const {payroll, account} = this.props;
     const {address, salary, employees} = this.state;
     payroll.addEmployee(address, salary, {
-      from: account,
+      from: account, gas: 1000000
     }).then(() => {
       const newEmployee = {
         address,
@@ -118,7 +118,7 @@ class EmployeeList extends Component {
     const {payroll, account} = this.props;
     const {employees} = this.state;
     payroll.updateEmployee(address, salary, {
-      from: account,
+      from: account, gas:1000000
     }).then(() => {
       this.setState({
         employees: employees.map((employee) => {
@@ -138,7 +138,7 @@ class EmployeeList extends Component {
     const {payroll, account} = this.props;
     const {employees} = this.state;
     payroll.removeEmployee(employeeId, {
-      from: account,
+      from: account, gas:1000000
     }).then((result) => {
       this.setState({
         employees: employees.filter(employee => employee.address !== employeeId)

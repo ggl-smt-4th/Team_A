@@ -17,7 +17,7 @@ class Fund extends Component {
     const { payroll, account, web3 } = this.props;
     payroll.addFund({
       from: account,
-      value: web3.toWei(this.state.fund)
+      value: web3.toWei(this.state.fund),
     });
   }
 
