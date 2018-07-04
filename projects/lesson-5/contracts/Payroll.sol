@@ -31,7 +31,7 @@ contract Payroll is Ownable {
         _;
     }
 
-    uint constant PAY_DURATION = 10 seconds;
+    uint constant PAY_DURATION = 30 days;
     uint public totalSalary = 0;
     address[] employeeAddressList;
 
