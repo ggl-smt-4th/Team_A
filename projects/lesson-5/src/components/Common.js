@@ -23,7 +23,6 @@ class Common extends Component {
     this.updateEmployee = payroll.UpdateEmployee(updateInfo);
     this.removeEmployee = payroll.RemoveEmployee(updateInfo);
      
-
     this.getEmployerInfo();
   }
 

@@ -67,9 +67,11 @@ class EmployeeList extends Component {
     loadEmployees(employeeCount) {
         const {payroll, account, web3} = this.props;
         const requests = [];
+
         for (let index = 0; index < employeeCount; index++) {
             requests.push(payroll.getEmployeeInfo.call(index, {from: account}))
         }
+
         Promise.all(requests)
             .then(values => {
                 const employees = values.map(value => ({
@@ -98,6 +100,7 @@ class EmployeeList extends Component {
                 key: address,
                 lastPayday: new Date().toString(),
             }
+            
             this.setState({
                 address: '',
                 salary: '',

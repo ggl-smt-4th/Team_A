@@ -4,6 +4,19 @@ import {Card, Col, Row, Layout, Alert, message, Button} from 'antd';
 import Common from './Common';
 
 class Employer extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            salary: 0,
+            lastPaidDate: '',
+            balance: false,
+        };
+    }
+
+    componentDidMount() {
+        this.checkEmployee();
+    }
     checkEmployee = () => {
         const {payroll, account, web3} = this.props;
         payroll.getEmployeeInfoById.call(account, {
@@ -30,19 +43,6 @@ class Employer extends Component {
         }).catch((error) => {
             message.error(error.message);
         });
-    }
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            salary: 0,
-            lastPaidDate: '',
-            balance: false,
-        };
-    }
-
-    componentDidMount() {
-        this.checkEmployee();
     }
 
     renderContent() {
