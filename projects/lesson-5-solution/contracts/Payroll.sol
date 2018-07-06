@@ -5,9 +5,6 @@ import './Ownable.sol';
 
 contract Payroll is Ownable {
 
-    /**
-     * event will be introduced in lesson 6
-     */
     event AddFund(address indexed from, uint value);
     event GetPaid(address indexed employee, uint value);
     event AddEmployee(address indexed from, address indexed employee, uint salary);
@@ -50,22 +47,6 @@ contract Payroll is Ownable {
      */
     mapping(address => Employee) public employees;
 
-    /* event NewEmployee(
-        address employee
-    );
-    event UpdateEmployee(
-        address employee
-    );
-    event RemoveEmployee(
-        address employee
-    );
-    event NewFund(
-        uint balance
-    );
-    event GetPaid(
-        address employee
-    ); */
-
     function Payroll() payable public Ownable {
         owner = msg.sender;
     }
@@ -85,7 +66,6 @@ contract Payroll is Ownable {
         employees[employeeId] = Employee(index, salary, now);
 
         totalSalary = totalSalary.add(salary);
-
         AddEmployee(msg.sender, employeeId, salary);
     }
 
@@ -107,9 +87,7 @@ contract Payroll is Ownable {
 
         // adjust length
         employeeAddressList.length -= 1;
-
         RemoveEmployee(msg.sender, employeeId);
-
     }
 
     function changePaymentAddress(address oldAddress, address newAddress) public onlyOwner shouldExist(oldAddress) shouldNotExist(newAddress) {
@@ -156,7 +134,6 @@ contract Payroll is Ownable {
 
         employees[employeeId].lastPayday = nextPayday;
         employeeId.transfer(employees[employeeId].salary);
-
         GetPaid(msg.sender, employees[employeeId].salary);
     }
 
