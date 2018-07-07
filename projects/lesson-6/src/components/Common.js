@@ -16,10 +16,23 @@ class Common extends Component {
       }
     }
 
+    this.addFund = payroll.AddFund(updateInfo);
+    this.addEmployee = payroll.AddEmployee(updateInfo);
+    this.updateEmployee = payroll.UpdateEmployee(updateInfo);
+    this.removeEmployee = payroll.RemoveEmployee(updateInfo);
+    this.getPaid = payroll.GetPaid(updateInfo);
+
     this.getEmployerInfo();
   }
 
   componentWillUnmount() {
+  
+    this.addFund.stopWatching();
+    this.addEmployee.stopWatching();
+    this.updateEmployee.stopWatching();
+    this.removeEmployee.stopWatching();
+    this.getPaid.stopWatching();
+
   }
 
   getEmployerInfo = () => {
