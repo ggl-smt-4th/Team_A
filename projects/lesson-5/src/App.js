@@ -58,8 +58,10 @@ class App extends Component {
 
     // Get accounts.
     this.state.web3.eth.getAccounts((error, accounts) => {
+      console.log('App.js 61 :' + accounts[0]);
       this.setState({
         account: accounts[0],
+        employee: accounts[1]
       });
       Payroll.deployed().then((instance) => {
         PayrollInstance = instance
@@ -77,7 +79,7 @@ class App extends Component {
   }
 
   renderContent = () => {
-    const { account, payroll, web3, mode } = this.state;
+    const { account, payroll, web3, mode ,employee} = this.state;
 
     if (!payroll) {
       return <Spin tip="Loading..." />;
@@ -87,7 +89,7 @@ class App extends Component {
       case 'employer':
         return <Employer account={account} payroll={payroll} web3={web3} />
       case 'employee':
-        return <Employee account={account} payroll={payroll} web3={web3} />
+        return <Employee account={employee} payroll={payroll} web3={web3} />
       default:
         return <Alert message="请选一个模式" type="info" showIcon />
     }

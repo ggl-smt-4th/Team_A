@@ -16,14 +16,16 @@ class Employer extends Component {
   }
 
   componentDidMount() {
-    const { account, payroll } = this.props;
+    const { account, payroll ,web3} = this.props;
+    console.log('Employer.js 20--:'+account);
     payroll.owner.call({
-      from: account
-    }).then((result) => {
+      from:account
+    }).then((result)=>{
+      console.log('24---'+result);
       this.setState({
         owner: result
       });
-    })
+    });
   }
 
   onSelectTab = ({key}) => {
@@ -35,7 +37,8 @@ class Employer extends Component {
   renderContent = () => {
     const { account, payroll, web3 } = this.props;
     const { mode, owner } = this.state;
-
+    console.log('account:'+account);
+    console.log('owner:'+owner);
     if (owner !== account) {
       return <Alert message="你没有权限" type="error" showIcon />;
     }

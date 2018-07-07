@@ -5,6 +5,15 @@ import './Ownable.sol';
 
 contract Payroll is Ownable {
 
+    /**
+     * event will be introduced in lesson 6
+     */
+    event AddFund(address indexed from, uint value);
+    event GetPaid(address indexed employee, uint value);
+    event AddEmployee(address indexed from, address indexed employee, uint salary);
+    event UpdateEmployee(address indexed from, address indexed employee, uint salary);
+    event RemoveEmployee(address indexed from, address indexed removed);
+
     using SafeMath for uint;
 
     /**
@@ -31,7 +40,7 @@ contract Payroll is Ownable {
         _;
     }
 
-    uint constant PAY_DURATION = 10 seconds;
+    uint constant PAY_DURATION = 30 days;
     uint public totalSalary = 0;
     address[] employeeAddressList;
 
@@ -150,4 +159,13 @@ contract Payroll is Ownable {
         lastPayday = employees[id].lastPayday;
         balance = address(id).balance;
     }
+
+
+    function checkInfo() public returns(uint balance,uint runway,uint employeeCount){
+        balance = address(this).balance;
+        runway = calculateRunway();
+        employeeCount = employeeAddressList.length;
+    }
+
 }
+
