@@ -16,6 +16,22 @@ contract Payroll is Ownable {
         uint lastPayday;
     }
 
+    event NewEmployee(
+        address employee
+    );
+    event UpdateEmployee(
+        address employee
+    );
+    event RemoveEmployee(
+        address employee
+    );
+    event NewFund(
+        uint balance
+    );
+    event GetPaid(
+        address employee
+    );
+
     modifier onlyOwner {
         require(msg.sender == owner);
         _;
@@ -60,6 +76,7 @@ contract Payroll is Ownable {
         employees[employeeId] = Employee(index, salary, now);
 
         totalSalary = totalSalary.add(salary);
+        NewEmployee(employeeId);
     }
 
     function removeEmployee(address employeeId) public onlyOwner shouldExist(employeeId) {
@@ -80,6 +97,8 @@ contract Payroll is Ownable {
 
         // adjust length
         employeeAddressList.length -= 1;
+
+        removeEmployee(employeeId);
     }
 
     function changePaymentAddress(address oldAddress, address newAddress) public onlyOwner shouldExist(oldAddress) shouldNotExist(newAddress) {
@@ -98,9 +117,12 @@ contract Payroll is Ownable {
         employees[employeeId].salary = salary;
         employees[employeeId].lastPayday = now;
         totalSalary = totalSalary.add(salary).sub(oldSalary);
+
+        UpdateEmployee(employeeId);
     }
 
     function addFund() payable public returns (uint) {
+        NewFund(address(this).balance);
         return address(this).balance;
     }
 
@@ -123,6 +145,7 @@ contract Payroll is Ownable {
 
         employees[employeeId].lastPayday = nextPayday;
         employeeId.transfer(employees[employeeId].salary);
+        GetPaid(employeeId);
     }
 
     function getEmployerInfo() view public returns (uint balance, uint runway, uint employeeCount) {
