@@ -49,7 +49,7 @@ class EmployeeList extends Component {
 
   componentDidMount() {
     const { payroll, account, web3 } = this.props;
-    payroll.checkInfo.call({
+    payroll.getEmployerInfo.call({
       from: account
     }).then((result) => {
       const employeeCount = result[2].toNumber();
@@ -65,15 +65,79 @@ class EmployeeList extends Component {
   }
 
   loadEmployees(employeeCount) {
+    const {payroll, account, web3} = this.props;
+    const request = [];
+
+    for(let index = 0; index < employeeCount; index++){
+      request.push(payroll.getEmployeeInfo.call(index, {
+        from: account
+      }));
+    }
+
+    Promise.all(request).then(values => {
+      const employees = values.map(value => ({
+        key: value[0],
+        address: value[0],
+        salary: web3.fromWei(value[1].toNumber()),
+        lastPaidDay: new Date(value[2].toNumber() * 1000 ).toString()
+      }));
+
+      this.setState({
+        employees,
+        loading: false
+      });
+    });
   }
 
   addEmployee = () => {
+    const {payroll, account} = this.props;
+    const {address, salary} = this.state;
+    payroll.addEmployee(address, salary, {
+      from: account,
+      gas: 1000000
+    }).then(() => {
+      alert('success');
+      this.setState({
+        address: '',
+        salary: '',
+        showModal: false
+      });
+    });
   }
 
   updateEmployee = (address, salary) => {
+    const {payroll, account} = this.props;
+    const {employees} = this.state;
+    payroll.updateEmployee(address, salary, {
+      from: account,
+      gas: 1000000
+    }).then(() => {
+      this.setState({
+        employees: employees.map((employee) => {
+          if(employee.address === address){
+            employee.salary = salary;
+          }
+          return employee;
+        })
+      });
+    }).catch(() => {
+      message.error('你没有足够的金额')
+    });
   }
 
   removeEmployee = (employeeId) => {
+    const {payroll, account} = this.props;
+    const {employees} = this.state;
+    payroll.removeEmployee(employeeId,{
+      from: account,
+      gas: 1000000
+    }).then(() => {
+      this.setState({
+        employees: employees.filter(employee => employee.address !== employeeId)
+      });
+    }).catch(() => {
+      message.error('你没有足够的金额')
+    });
   }
 
   renderModal() {
@@ -94,7 +158,7 @@ class EmployeeList extends Component {
           <FormItem label="薪水">
             <InputNumber
               min={1}
-              onChange={salary => this.setState({salary})}
+              onChange={value => this.setState({salary: value})}
             />
           </FormItem>
         </Form>
