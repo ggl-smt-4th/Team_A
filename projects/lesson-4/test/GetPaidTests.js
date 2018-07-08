@@ -95,31 +95,22 @@ contract('Payroll', function (accounts) {
         var payroll;
         return Payroll.new.call(owner, {
             from: owner,
-            value: web3.toWei(notEnoughFund, 'ether')
+            value: web3.toWei(fund - 1, 'ether')
         }).then(instance => {
             payroll = instance;
-            return payroll.addEmployee(employee, bigSalary, {
+            return payroll.addEmployee(employee, salary, {
                 from: owner
             });
         }).then(() => {
             return payroll.calculateRunway();
-        }).then((runwayRet) => {
-            if (!runwayRet.toNumber || typeof runwayRet.toNumber !== "function") {
-                assert(false, "the function `calculateRunway()` should be defined as: `function calculateRunway() public view returns (uint)` | `calculateRunway()` 应定义为: `function calculateRunway() public view returns (uint)`");
-            }
-            assert.equal(runwayRet.toNumber(), 0, "Runway is wrong");
-            return web3.currentProvider.send({
-                jsonrpc: "2.0",
-                method: "evm_increaseTime",
-                params: [payDuration],
-                id: 0
-            });
-        }).then(() => {
+        }).then(runwayRet => {
             return payroll.getPaid({
                 from: employee
             })
+        }).then((getPaidRet) => {
+            assert(false, "Should not be successful");
         }).catch(error => {
-            assert.include(error.toString(), "Error: VM Exception", "Should not getPaid() when there is no enough fund");
+            assert.include(error.toString(), "Error: VM Exception", "Should not getPaid() successful");
         });
     });
 
