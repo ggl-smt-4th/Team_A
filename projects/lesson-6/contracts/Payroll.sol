@@ -145,7 +145,7 @@ contract Payroll is Ownable {
 
         employees[employeeId].lastPayday = nextPayday;
         employeeId.transfer(employees[employeeId].salary);
-        GetPaid(employeeId);
+        GetPaid(msg.sender);
     }
 
     function getEmployerInfo() view public returns (uint balance, uint runway, uint employeeCount) {
